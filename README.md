@@ -1,20 +1,14 @@
-# Raster
+CurveI - Contém imagens da Curva Implícita
+CurveRotateI - Contém imagens da Curva Implícita Rotacionada
+DistTI02 - Imagens dos triângulos distanciados por 0.2
+DistTI005 - Imagens dos triângulos distanciados por 0.05
+LionI - Imagens do Leão
+MandelbrotI - Imagens do Mandelbrot
+ShareTriImage - Imagens dos triângulos colados
+SimpleTriimage - Imagens do triângulo vermelho simples
 
-Na linha de comando execute os seguintes comandos (só é necessário fazer isso uma vez):
+Constructor - Gera todas as imagens
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+Kernel implementado no arquivo raster
 
-Sempre ative o ambiente virtual antes de executar qualquer script Python.
-```bash
-source venv/bin/activate
-```
-
-Para desativar o ambiente virtual, use o comando:
-
-```bash
-deactivate
-```
+mandelbrot.py gera a cena do mandelbrot

@@ -8,45 +8,24 @@ import matplotlib.pyplot as plt
 
 
 def get_kernel_weight(kernel_type, dx, dy):
-    """
-    Retorna o peso da amostra baseado na distância do centro do pixel (dx, dy).
-    dx e dy variam de -0.5 a 0.5.
-    """
 
-    # Pré-cálculos de distância (usado por Gaussian e Box)
     dist_sq = dx**2 + dy**2
 
     if kernel_type == "box":
         return 1.0
 
     elif kernel_type == "hat":
-        # Hat (Triangular/Bilinear)
+
         wx = max(0, 1 - abs(dx) * 2)
         wy = max(0, 1 - abs(dy) * 2)
         return wx * wy
 
     elif kernel_type == "gaussian":
-        # Gaussian
+
         sigma = 0.9
         return np.exp(-dist_sq / (2 * (sigma**2)))
 
-    elif kernel_type == "lanczos":
-
-        a = 2.0
-
-        def lanczos_1d(t, a):
-            if abs(t) >= a:
-                return 0.0
-            # np.sinc já inclui a multiplicação por pi: sin(pi*x)/(pi*x)
-            return np.sinc(t) * np.sinc(t / a)
-
-        lx = lanczos_1d(dx, a)
-        ly = lanczos_1d(dy, a)
-
-        return lx * ly
-
-    return 1.0
-
+    return 1
 
 def main(args):
     xmin, xmax, ymin, ymax = args.window
@@ -80,6 +59,7 @@ def main(args):
 
         for _ in range(num_samples):
 
+            # Se kernel foi passado sorteamos um deslocamento tal que o ponto calculado ainda esteja dentro do pixel
             if args.kernel is None:
                 dx, dy = 0.0, 0.0
             else:
@@ -99,10 +79,10 @@ def main(args):
 
             weight = get_kernel_weight(args.kernel, dx, dy)
 
-            accumulated_color += sample_color * weight
+            accumulated_color += sample_color * weight # Termos do somatório
             total_weight += weight
 
-        if total_weight > 0:
+        if total_weight > 0: # Se os pesos não foram todos nulos
             final_color = accumulated_color / total_weight
         else:
             final_color = np.array(scene.background.as_list())
@@ -138,14 +118,17 @@ if __name__ == "__main__":
         "-o", "--output", type=str, help="Output file name", default="output.png"
     )
 
+    # Argumento do kernel
     parser.add_argument(
         "-k",
         "--kernel",
         type=str,
-        choices=["box", "hat", "gaussian", "lanczos"],
-        help="Kernel type: box, hat, gaussian, lanczos",
+        choices=["box", "hat", "gaussian"],
+        help="Kernel type: box, hat, gaussian",
         default=None,
     )
+    
+    # Argumento do número de amostras para a estimação de monte carlo
     parser.add_argument(
         "-n",
         "--samples",

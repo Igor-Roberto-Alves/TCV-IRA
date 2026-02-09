@@ -11,9 +11,14 @@ class Scene(BaseScene):
         def special_curve(point):
             x, y = point
             # Matriz de rotação [[cos(@), -sin(@)], [sin(@), cos(@)]]
-            x, y = x * np.cos(np.pi) + y * np.sin(np.pi), -x * np.sin(
-                np.pi
-            ) + y * np.cos(np.pi)
+            
+            want_rotate = False
+            rad = np.pi
+            if want_rotate:
+                x, y = x * np.cos(np.pi) + y * np.sin(np.pi), -x * np.sin(
+                    np.pi
+                ) + y * np.cos(np.pi)
+
             return (
                 0.004
                 + 0.110 * x
